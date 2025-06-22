@@ -28,16 +28,3 @@ Built with:
 
 ---
 
-## 📦 Project Structure
-
-calorie-tracker-frontend/
-├── components/
-│ └── ImageUploader.tsx
-├── screens/
-│ ├── HomeScreen.tsx
-│ └── HistoryScreen.tsx
-├── services/
-│ └── api.ts
-├── App.tsx
-├── app.json
-└── package.json
