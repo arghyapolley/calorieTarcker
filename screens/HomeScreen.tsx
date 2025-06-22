@@ -1,5 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, Button, Image, StyleSheet, ActivityIndicator, Alert, SafeAreaView } from 'react-native';
+import {
+  View,
+  Text,
+  Button,
+  Image,
+  StyleSheet,
+  ActivityIndicator,
+  Alert,
+  SafeAreaView,
+  Platform,
+  ScrollView,
+} from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
@@ -35,7 +46,9 @@ const HomeScreen = () => {
     setLoading(true);
     try {
       const response = await axios.post('http://192.168.1.102:5000/api/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
 
       setCalories(response.data.calories);
@@ -48,30 +61,32 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>🍽️ Calorie Tracker</Text>
-      
-      <Button title="📷 Select Image" onPress={pickImage} />
+      <ScrollView contentContainerStyle={styles.scroll}>
+        <Text style={styles.title}>🍽️ Calorie Tracker</Text>
 
-      {image && (
-        <Image source={{ uri: image.uri }} style={styles.image} />
-      )}
+        <Button title="📷 Select Food Image" onPress={pickImage} />
 
-      {image && (
-        <Button title="🚀 Upload & Analyze" onPress={uploadImage} />
-      )}
+        {image && (
+          <Image source={{ uri: image.uri }} style={styles.image} resizeMode="cover" />
+        )}
 
-      {loading && <ActivityIndicator size="large" style={{ marginTop: 10 }} />}
+        {image && (
+          <Button title="🚀 Upload & Analyze" onPress={uploadImage} />
+        )}
 
-      {calories !== null && (
-        <View style={styles.result}>
-          <Text style={styles.resultText}>🍎 Food: {foodLabel}</Text>
-          <Text style={styles.resultText}>🔥 Calories: {calories} kcal</Text>
+        {loading && <ActivityIndicator size="large" style={{ marginTop: 10 }} />}
+
+        {calories !== null && (
+          <View style={styles.result}>
+            <Text style={styles.resultText}>🍎 Food: {foodLabel}</Text>
+            <Text style={styles.resultText}>🔥 Calories: {calories} kcal</Text>
+          </View>
+        )}
+
+        <View style={{ marginTop: 20 }}>
+          <Button title="📋 View History" onPress={() => navigation.navigate('History')} />
         </View>
-      )}
-
-      <View style={{ marginTop: 20 }}>
-        <Button title="📋 View History" onPress={() => navigation.navigate('History')} />
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -81,32 +96,36 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
     backgroundColor: '#fff',
   },
+  scroll: {
+    padding: 20,
+    alignItems: 'center',
+  },
   title: {
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
   },
   image: {
-    width: '100%',
+    width: Platform.OS === 'web' ? 400 : '100%',
     height: 250,
     marginVertical: 15,
     borderRadius: 10,
   },
   result: {
     marginTop: 20,
-    padding: 10,
+    padding: 12,
     borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    backgroundColor: '#f5f5f5',
+    borderColor: '#ddd',
+    borderRadius: 10,
+    backgroundColor: '#f9f9f9',
+    width: '100%',
   },
   resultText: {
     fontSize: 18,
     fontWeight: '600',
-    marginBottom: 5,
+    marginBottom: 6,
   },
 });
